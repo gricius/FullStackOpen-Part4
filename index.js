@@ -1,6 +1,4 @@
-# 4.1 Blog list, step1
-Let's imagine a situation, where you receive an email that contains the following application body:
-```JSX
+require('dotenv').config()
 const express = require('express')
 const app = express()
 const cors = require('cors')
@@ -15,8 +13,8 @@ const blogSchema = new mongoose.Schema({
 
 const Blog = mongoose.model('Blog', blogSchema)
 
-const mongoUrl = 'mongodb://localhost/bloglist'
-mongoose.connect(mongoUrl)
+const MONGODB_URI = process.env.MONGODB_URI
+mongoose.connect(MONGODB_URI)
 
 app.use(cors())
 app.use(express.json())
@@ -39,11 +37,7 @@ app.post('/api/blogs', (request, response) => {
     })
 })
 
-const PORT = 3003
+const PORT = process.env.PORT
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`)
 })
-```
-Turn the application into a functioning npm project. To keep your development productive, configure the application to be executed with nodemon. You can create a new database for your application with MongoDB Atlas, or use the same database from the previous part's exercises.
-
-Verify that it is possible to add blogs to the list with Postman or the VS Code REST client and that the application returns the added blogs at the correct endpoint.
