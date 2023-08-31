@@ -117,5 +117,19 @@ Another way of running a single test (or describe block) is to specify the name 
 ```
 npm test -- -t 'when list has only one blog, equals the likes of that'
 ```
+# 4.5*: helper functions and unit tests, step3
+Define a new favoriteBlog function that receives a list of blogs as a parameter. The function finds out which blog has the most likes. If there are many top favorites, it is enough to return one of them.
+
+The value returned by the function could be in the following format:
+```jsx
+{
+  title: "Canonical string reduction",
+  author: "Edsger W. Dijkstra",
+  likes: 12
+}
+```
+NB when you are comparing objects, the toEqual method is probably what you want to use, since the toBe tries to verify that the two values are the same value, and not just that they contain the same properties.
+
+Write the tests for this exercise inside of a new describe block. Do the same for the remaining exercises as well.
 
 
