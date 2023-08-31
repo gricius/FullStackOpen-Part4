@@ -82,3 +82,40 @@ test('dummy returns one', () => {
   expect(result).toBe(1)
 })
 ```
+# 4.4: helper functions and unit tests, step2
+Define a new totalLikes function that receives a list of blog posts as a parameter. The function returns the total sum of likes in all of the blog posts.
+
+Write appropriate tests for the function. It's recommended to put the tests inside of a describe block so that the test report output gets grouped nicely:
+<img src='https://fullstackopen.com/static/56229b0710f038d818828ad82ff10bfd/5a190/5.png'>
+Defining test inputs for the function can be done like this:
+```JSX
+describe('total likes', () => {
+  const listWithOneBlog = [
+    {
+      _id: '5a422aa71b54a676234d17f8',
+      title: 'Go To Statement Considered Harmful',
+      author: 'Edsger W. Dijkstra',
+      url: 'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+      likes: 5,
+      __v: 0
+    }
+  ]
+
+  test('when list has only one blog, equals the likes of that', () => {
+    const result = listHelper.totalLikes(listWithOneBlog)
+    expect(result).toBe(5)
+  })
+})
+```
+If defining your own test input list of blogs is too much work, you can use the ready-made list here.
+
+You are bound to run into problems while writing tests. Remember the things that we learned about debugging in part 3. You can print things to the console with console.log even during test execution. It is even possible to use the debugger while running tests, you can find instructions for that here.
+
+NB: if some test is failing, then it is recommended to only run that test while you are fixing the issue. You can run a single test with the only method.
+
+Another way of running a single test (or describe block) is to specify the name of the test to be run with the -t flag:
+```
+npm test -- -t 'when list has only one blog, equals the likes of that'
+```
+
+
