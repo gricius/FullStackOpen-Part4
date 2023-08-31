@@ -6,6 +6,7 @@ const mostBlogs = (blogs) => {
 
   const authorCounts = _.countBy(blogs, 'author')
   const topAuthor = _.maxBy(_.keys(authorCounts), (author) => authorCounts[author])
+  console.log('Top Author: ', topAuthor, 'Authors count: ', authorCounts[topAuthor])
 
   return {
     author: topAuthor,
@@ -25,7 +26,7 @@ const favoriteBlog = (blogs) => {
     return blog.likes > maxLikes.likes ? blog : maxLikes
   }, blogs[0])
 
-  console.log(maxLikes.title, maxLikes.author, maxLikes.likes)
+  console.log('Favorite Blog: ', maxLikes.title, 'Aothor: ', maxLikes.author, 'Likes', maxLikes.likes)
 
   return {
     title: maxLikes.title,
@@ -34,8 +35,23 @@ const favoriteBlog = (blogs) => {
   }
 }
 
+const mostLikes = (blogs) => {
+  if (blogs.length === 0) return null
+
+  const authorLikes = _.groupBy(blogs, 'author')
+  const authorTotalLikes = _.mapValues(authorLikes, (blogs) => _.sumBy(blogs, 'likes'))
+  const topAuthor = _.maxBy(_.keys(authorTotalLikes), (author) => authorTotalLikes[author])
+  console.log('Top Author: ', topAuthor, 'Likes: ', authorTotalLikes[topAuthor])
+
+  return {
+    author: topAuthor,
+    likes: authorTotalLikes[topAuthor]
+  }
+}
+
 module.exports = {
   totalLikes,
   favoriteBlog,
-  mostBlogs
+  mostBlogs,
+  mostLikes
 }
