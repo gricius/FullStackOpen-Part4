@@ -1,4 +1,19 @@
 // ../utils/list_helper.js
+const _ = require('lodash')
+
+const mostBlogs = (blogs) => {
+  if (blogs.length === 0) return null
+
+  const authorCounts = _.countBy(blogs, 'author')
+  const topAuthor = _.maxBy(_.keys(authorCounts), (author) => authorCounts[author])
+
+  return {
+    author: topAuthor,
+    blogs: authorCounts[topAuthor]
+  }
+}
+
+
 const totalLikes = (blogs) => {
   return blogs.reduce((total, blog) => total + blog.likes, 0)
 }
@@ -21,5 +36,6 @@ const favoriteBlog = (blogs) => {
 
 module.exports = {
   totalLikes,
-  favoriteBlog
+  favoriteBlog,
+  mostBlogs
 }
