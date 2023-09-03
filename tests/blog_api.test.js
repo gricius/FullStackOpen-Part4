@@ -118,6 +118,28 @@ test('deleting a single blog post resource', async () => {
 }
 )
 
+test('updating the information of an individual blog post', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const updatedBlog = {
+    title: blogToUpdate.title,
+    author: blogToUpdate.author,
+    url: blogToUpdate.url,
+    likes: 100
+  }
+
+  await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedBlog)
+    .expect(200)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd[0].likes).toBe(100)
+}
+)
+
 afterAll(async () => {
   await mongoose.connection.close()
 }
