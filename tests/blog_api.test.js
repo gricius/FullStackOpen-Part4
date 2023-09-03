@@ -68,6 +68,26 @@ test('making an HTTP POST request to the /api/blogs URL successfully creates a n
 }
 )
 
+/* Write a test that verifies that if the likes property is missing from the request, it will default to the value 0 */
+
+test('if the likes property is missing from the request, it will default to the value 0', async () => {
+  const newBlog = {
+    title: 'Test Blog',
+    author: 'Test Author',
+    url: 'http://testurl.com'
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .expect(201)
+    .expect('Content-Type',/application\/json/)
+
+  const response = await api.get('/api/blogs')
+
+  expect(response.body[3].likes).toBe(0)
+}
+)
 
 afterAll(async () => {
   await mongoose.connection.close()
