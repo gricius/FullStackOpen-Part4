@@ -68,8 +68,6 @@ test('making an HTTP POST request to the /api/blogs URL successfully creates a n
 }
 )
 
-/* Write a test that verifies that if the likes property is missing from the request, it will default to the value 0 */
-
 test('if the likes property is missing from the request, it will default to the value 0', async () => {
   const newBlog = {
     title: 'Test Blog',
@@ -99,6 +97,24 @@ test('if the title or url properties are missing from the request data, the stat
     .post('/api/blogs')
     .send(newBlog)
     .expect(400)
+}
+)
+
+test('deleting a single blog post resource', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
+
+  const contents = blogsAtEnd.map(r => r.title)
+
+  expect(contents).not.toContain(blogToDelete.title)
 }
 )
 

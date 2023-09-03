@@ -203,3 +203,10 @@ Make the required changes to the code so that it passes the test.
 Write tests related to creating new blogs via the /api/blogs endpoint, that verify that if the title or url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request.
 
 Make the required changes to the code so that it passes the test.
+
+# 4.13 Blog list expansions, step1
+Implement functionality for deleting a single blog post resource.
+
+Use the async/await syntax. Follow RESTful conventions when defining the HTTP API.
+
+Implement tests for the functionality.
