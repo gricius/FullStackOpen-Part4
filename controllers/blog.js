@@ -10,14 +10,27 @@ blogsRouter.get('/', (request, response) => {
 }
 )
 
-blogsRouter.post('/', (request, response) => {
-  const blog = new Blog(request.body)
+/*
+write blogsRouter.post() to save a new blog post to the database.
+if the title and url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request.
+*/
+blogsRouter.post('/', async (request, response) => {
+  const body = request.body
 
-  blog
-    .save()
-    .then(result => {
-      response.status(201).json(result)
-    })
+  if (body.title === undefined || body.url === undefined) {
+    return response.status(400).end()
+  }
+
+  const blog = new Blog({
+    title: body.title,
+    author: body.author,
+    url: body.url,
+    likes: (body.likes === undefined) ? 0 : body.likes
+  }
+  )
+
+  const savedBlog = await blog.save()
+  response.status(201).json(savedBlog)
 }
 )
 
