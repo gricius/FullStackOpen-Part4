@@ -155,3 +155,32 @@ Define a function called mostLikes that receives an array of blogs as its parame
 }
 ```
 If there are many top bloggers, then it is enough to show any one of them.
+
+# 4.8: Blog list tests, step1
+Use the supertest package for writing a test that makes an HTTP GET request to the /api/blogs URL. Verify that the blog list application returns the correct amount of blog posts in the JSON format.
+
+Once the test is finished, refactor the route handler to use the async/await syntax instead of promises.
+
+Notice that you will have to make similar changes to the code that were made in the <a href='https://fullstackopen.com/en/part4/testing_the_backend#test-environment'>material</a>, like defining the test environment so that you can write tests that use separate databases.
+
+NB: When running the tests, you may run into the following warning:
+<img src='https://fullstackopen.com/static/e8bcb367be162a9be3c71b7f47d855a2/5a190/8a.png'>
+
+One way to get rid of this is to add to the tests directory a file teardown.js with the following content
+```jsx
+module.exports = () => {
+  process.exit(0)
+}
+```
+and by extending the Jest definitions in the package.json as follows
+```jsx
+{
+ //...
+ "jest": {
+   "testEnvironment": "node",
+
+   "globalTeardown": "./tests/teardown.js"
+ }
+}
+```
+
