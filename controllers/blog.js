@@ -10,10 +10,6 @@ blogsRouter.get('/', (request, response) => {
 }
 )
 
-/*
-write blogsRouter.post() to save a new blog post to the database.
-if the title and url properties are missing from the request data, the backend responds to the request with the status code 400 Bad Request.
-*/
 blogsRouter.post('/', async (request, response) => {
   const body = request.body
 

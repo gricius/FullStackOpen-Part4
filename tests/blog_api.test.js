@@ -104,4 +104,5 @@ test('if the title or url properties are missing from the request data, the stat
 
 afterAll(async () => {
   await mongoose.connection.close()
-})
+}
+)
