@@ -211,7 +211,7 @@ Use the async/await syntax. Follow RESTful conventions when defining the HTTP AP
 
 Implement tests for the functionality.
 
-# Blog list expansions, step2
+# 4.14 Blog list expansions, step2
 Implement functionality for updating the information of an individual blog post.
 
 Use async/await.
@@ -219,3 +219,19 @@ Use async/await.
 The application mostly needs to update the number of likes for a blog post. You can implement this functionality the same way that we implemented updating notes in part 3.
 
 Implement tests for the functionality.
+
+# 4.15: bloglist expansion, step3
+Implement a way to create new users by doing an HTTP POST request to address api/users. Users have a username, password and name.
+
+Do not save passwords to the database as clear text, but use the bcrypt library like we did in part 4 chapter Creating new users.
+
+NB Some Windows users have had problems with bcrypt. If you run into problems, remove the library with command
+```
+npm uninstall bcrypt 
+```
+and install bcryptjs instead.
+
+Implement a way to see the details of all users by doing a suitable HTTP request.
+
+The list of users can, for example, look as follows:
+<img src='https://fullstackopen.com/static/b59bda1bd7e5987a5c805332d509e516/5a190/22.png'>
