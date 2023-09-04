@@ -235,3 +235,12 @@ Implement a way to see the details of all users by doing a suitable HTTP request
 
 The list of users can, for example, look as follows:
 <img src='https://fullstackopen.com/static/b59bda1bd7e5987a5c805332d509e516/5a190/22.png'>
+
+# 4.16*: bloglist expansion, step4
+Add a feature which adds the following restrictions to creating new users: Both username and password must be given. Both username and password must be at least 3 characters long. The username must be unique.
+
+The operation must respond with a suitable status code and some kind of an error message if an invalid user is created.
+
+NB Do not test password restrictions with Mongoose validations. It is not a good idea because the password received by the backend and the password hash saved to the database are not the same thing. The password length should be validated in the controller as we did in part 3 before using Mongoose validation.
+
+Also, implement tests that ensure invalid users are not created and that an invalid add user operation returns a suitable status code and error message.

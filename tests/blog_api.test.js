@@ -33,10 +33,6 @@ test('there are three blogs', async () => {
 }
 )
 
-/*
-Write a test that verifies that the unique identifier property of the blog posts is named id
-*/
-
 test('the unique identifier property of the blog posts is named id', async () => {
   const response = await api.get('/api/blogs')
 
@@ -186,7 +182,27 @@ describe('when there is initially one user in db', () => {
       .expect(400)
       .expect('Content-Type',/application\/json/)
 
-    expect(result.body.error).toContain('`username` to be unique')
+    expect(result.body.error).toContain('username must be unique')
+
+    const usersAtEnd = await helper.usersInDb()
+    expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('creation fails with proper statuscode and message if invalid username or password', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'te',
+      name: 'Test User',
+      password: 'te'
+    }
+
+    const result = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+      .expect('Content-Type',/application\/json/)
+    expect(result.body.error).toContain('username or password too short')
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
