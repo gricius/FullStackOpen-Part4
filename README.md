@@ -259,3 +259,30 @@ Implement token-based authentication according to part 4 chapter Token authentic
 
 # 4.19: bloglist expansion, step7
 Modify adding new blogs so that it is only possible if a valid token is sent with the HTTP POST request. The user identified by the token is designated as the creator of the blog.
+
+# 4.20*: bloglist expansion, step8
+<a href="https://fullstackopen.com/en/part4/token_authentication">This example</a> from part 4 shows taking the token from the header with the getTokenFrom helper function.
+
+If you used the same solution, refactor taking the token to a middleware. The middleware should take the token from the Authorization header and place it into the token field of the request object.
+
+In other words, if you register this middleware in the app.js file before all routes
+app.use(middleware.tokenExtractor)
+```
+Routes can access the token with request.token:
+
+```jsx
+blogsRouter.post('/', async (request, response) => {
+  // ..
+  const decodedToken = jwt.verify(request.token, process.env.SECRET)
+  // ..
+})
+```
+Remember that a normal middleware function is a function with three parameters, that at the end calls the last parameter next to move the control to the next middleware:
+
+```jsx
+const tokenExtractor = (request, response, next) => {
+  // code that extracts the token
+
+  next()
+}
+```
