@@ -1,15 +1,15 @@
 // ../utils/tokenMiddleware.js
 
-const jwt = require('jsonwebtoken');
+// const jwt = require('jsonwebtoken')
 
 const tokenExtractor = (request, response, next) => {
-  const authorization = request.get('authorization');
+  const authorization = request.get('authorization')
   if (authorization && authorization.startsWith('Bearer ')) {
-    request.token = authorization.substring(7); // Remove 'Bearer ' prefix
+    request.token = authorization.substring(7) // Remove 'Bearer ' prefix
   } else {
-    request.token = null;
+    request.token = null
   }
-  next();
-};
+  next()
+}
 
-module.exports = tokenExtractor;
+module.exports = tokenExtractor
