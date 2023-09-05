@@ -244,3 +244,13 @@ The operation must respond with a suitable status code and some kind of an error
 NB Do not test password restrictions with Mongoose validations. It is not a good idea because the password received by the backend and the password hash saved to the database are not the same thing. The password length should be validated in the controller as we did in part 3 before using Mongoose validation.
 
 Also, implement tests that ensure invalid users are not created and that an invalid add user operation returns a suitable status code and error message.
+
+# 4.17: bloglist expansion, step5
+Expand blogs so that each blog contains information on the creator of the blog.
+
+Modify adding new blogs so that when a new blog is created, any user from the database is designated as its creator (for example the one found first). Implement this according to part 4 chapter populate. Which user is designated as the creator does not matter just yet. The functionality is finished in exercise 4.19.
+
+Modify listing all blogs so that the creator's user information is displayed with the blog:
+<img src="https://fullstackopen.com/static/199682ad74f50747c90997a967856ffa/5a190/23e.png">
+and listing all users also displays the blogs created by each user:
+<img src="https://fullstackopen.com/static/ac9967c89785b33440e9b1b4e87c17e5/5a190/24e.png">
