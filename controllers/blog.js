@@ -1,8 +1,7 @@
 const blogsRouter = require('express').Router()
-const blog = require('../models/blog')
 const Blog = require('../models/blog')
-const User = require('../models/user')
-const jwt = require('jsonwebtoken')
+// const User = require('../models/user')
+// const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
   const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 }) // Populate user info
@@ -50,13 +49,14 @@ blogsRouter.delete('/:id', async (request, response) => {
       return response.status(404).json({ error: 'Blog not found' })
     }
 
-    if (blog.user.toString() !== user._id.toString()) {
-      return response.status(403).json({ error: 'Permission denied' })
-    }
+    // if (blog.user.toString() !== user._id.toString()) {
+    //   return response.status(403).json({ error: 'Permission denied' })
+    // }
 
     await Blog.findByIdAndRemove(id)
     response.status(204).end()
   } catch (error) {
+    console.log(error)
     return response.status(500).json({ error: 'Internal server error' })
   }
 })

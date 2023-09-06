@@ -1,9 +1,9 @@
 POST http://localhost:3003/api/blogs HTTP/1.1
 content-type: application/json
-Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0ZjY4ZTgzMjU4YmViMDE4NjVkMjBlYSIsImlhdCI6MTY5Mzk4NDg0MSwiZXhwIjoxNjkzOTg4NDQxfQ.Si-9FeaN71-XenVtT-_5QQ-WYwYQ2e57td7GNibAut0
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0ZjY4ZTgzMjU4YmViMDE4NjVkMjBlYSIsImlhdCI6MTY5NDAwODYzNSwiZXhwIjoxNjk0MDEyMjM1fQ.gfYAFSgg9g1E0rNDb2myRRSlk6cvUDWeEWB2JxIrZGk
 
 {
-    "title": "Test",
+    "title": "Test22",
     "author": "Superuser",
     "url": "http://localhost:3003",
     "likes": 1

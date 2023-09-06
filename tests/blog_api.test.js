@@ -1,3 +1,4 @@
+// ;;/tests/blog_api.test.js
 const mongoose = require('mongoose')
 const supertest = require('supertest')
 const helper = require('./test_helper')
@@ -7,12 +8,26 @@ const Blog = require('../models/blog')
 const bcrypt = require('bcrypt')
 const User = require('../models/user')
 
+let token
+
+beforeAll(async () => {
+  const userCredentials = {
+    username: 'root',
+    password: 'sekret'
+  }
+
+  const response = await api
+    .post('/api/login')
+    .send(userCredentials)
+    .expect(200)
+
+  token = response.body.token
+})
+
 beforeEach(async () => {
   await Blog.deleteMany({})
-  console.log('cleared')
 
-  const blogObjects = helper.initialBlogs
-    .map(blog => new Blog(blog))
+  const blogObjects = helper.initialBlogs.map(blog => new Blog(blog))
   const promiseArray = blogObjects.map(blog => blog.save())
   await Promise.all(promiseArray)
 }
@@ -40,29 +55,6 @@ test('the unique identifier property of the blog posts is named id', async () =>
 }
 )
 
-test('making an HTTP POST request to the /api/blogs URL successfully creates a new blog post', async () => {
-  const newBlog = {
-    title: 'Test Blog',
-    author: 'Test Author',
-    url: 'http://testurl.com',
-    likes: 0
-  }
-
-  await api
-    .post('/api/blogs')
-    .send(newBlog)
-    .expect(201)
-    .expect('Content-Type',/application\/json/)
-
-  const response = await api.get('/api/blogs')
-
-  const contents = response.body.map(r => r.title)
-
-  expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
-  expect(contents).toContain('Test Blog')
-}
-)
-
 test('if the likes property is missing from the request, it will default to the value 0', async () => {
   const newBlog = {
     title: 'Test Blog',
@@ -73,6 +65,7 @@ test('if the likes property is missing from the request, it will default to the 
   await api
     .post('/api/blogs')
     .send(newBlog)
+    .set('Authorization',`Bearer ${token}`)
     .expect(201)
     .expect('Content-Type',/application\/json/)
 
@@ -91,25 +84,8 @@ test('if the title or url properties are missing from the request data, the stat
   await api
     .post('/api/blogs')
     .send(newBlog)
+    .set('Authorization',`Bearer ${token}`)
     .expect(400)
-}
-)
-
-test('deleting a single blog post resource', async () => {
-  const blogsAtStart = await helper.blogsInDb()
-  const blogToDelete = blogsAtStart[0]
-
-  await api
-    .delete(`/api/blogs/${blogToDelete.id}`)
-    .expect(204)
-
-  const blogsAtEnd = await helper.blogsInDb()
-
-  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length - 1)
-
-  const contents = blogsAtEnd.map(r => r.title)
-
-  expect(contents).not.toContain(blogToDelete.title)
 }
 )
 
@@ -206,6 +182,78 @@ describe('when there is initially one user in db', () => {
 
     const usersAtEnd = await helper.usersInDb()
     expect(usersAtEnd).toHaveLength(usersAtStart.length)
+  })
+
+  test('adding a blog without a valid token returns 401 Unauthorized', async () => {
+    const newBlog = {
+      title: 'Unauthorized Blog',
+      author: 'Unauthorized Author',
+      url: 'http://unauthorizedurl.com',
+      likes: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+      .expect('Content-Type',/application\/json/)
+  })
+})
+
+describe('creation and deletion of a blog', () => {
+  beforeAll(async () => {
+    const userCredentials = {
+      username: 'root',
+      password: 'sekret'
+    }
+
+    const response = await api
+      .post('/api/login')
+      .send(userCredentials)
+
+
+    token = response.body.token
+  })
+
+  test('creating when authorised', async () => {
+    const newBlog = {
+      title: 'Test Blog',
+      author: 'Test Author',
+      url: 'http://testurl.com',
+      likes: 0
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization',`Bearer ${token}`)
+      .expect(201)
+      .expect('Content-Type',/application\/json/)
+
+    const response = await api.get('/api/blogs')
+
+    const contents = response.body.map(r => r.title)
+
+    expect(response.body).toHaveLength(helper.initialBlogs.length + 1)
+    expect(contents).toContain('Test Blog')
+  }
+  )
+
+  test('deleting when authorised', async () => {
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[0]
+
+    await api
+      .delete(`/api/blogs/${blogToDelete.id}`)
+      .set('Authorization',`Bearer ${token}`)
+
+    const blogsAtEnd = await helper.blogsInDb()
+
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length -1 )
+
+    const contents = blogsAtEnd.map(r => r.title)
+
+    expect(contents).not.toContain(blogToDelete.title)
   })
 })
 
