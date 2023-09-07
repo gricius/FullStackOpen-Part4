@@ -240,16 +240,31 @@ describe('creation and deletion of a blog', () => {
   )
 
   test('deleting when authorised', async () => {
-    const blogsAtStart = await helper.blogsInDb()
-    const blogToDelete = blogsAtStart[0]
+    const newBlog = {
+      title: 'Test Blog',
+      author: 'Test Author',
+      url: 'http://testurl.com',
+      likes: 0
+    }
 
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .set('Authorization',`Bearer ${token}`)
+      .expect(201)
+      .expect('Content-Type',/application\/json/)
+    // Get the id of the new blog
+    const blogsAtStart = await helper.blogsInDb()
+    const blogToDelete = blogsAtStart[blogsAtStart.length - 1]
+    // Delete the blog
     await api
       .delete(`/api/blogs/${blogToDelete.id}`)
       .set('Authorization',`Bearer ${token}`)
+      .expect(204)
 
     const blogsAtEnd = await helper.blogsInDb()
 
-    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length -1 )
+    expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length)
 
     const contents = blogsAtEnd.map(r => r.title)
 
@@ -257,6 +272,64 @@ describe('creation and deletion of a blog', () => {
   })
 })
 
+test('an authorized user cannot delete blogs they haven\'t created', async () => {
+  // Create a new user
+  const newUser = {
+    username: 'testuser',
+    name: 'Test User',
+    password: 'testpassword'
+  }
+
+  await api
+    .post('/api/users')
+    .send(newUser)
+    .expect(201)
+    .expect('Content-Type',/application\/json/)
+  // Login as the new user
+  const userCredentials = {
+    username: 'testuser',
+    password: 'testpassword'
+  }
+
+  const response = await api
+    .post('/api/login')
+    .send(userCredentials)
+    .set('Authorization',`Bearer ${token}`)
+    .expect(200)
+
+  const newToken = response.body.token
+  // Create a new blog
+  const newBlog = {
+    title: 'Test Blog',
+    author: 'Test Author',
+    url: 'http://testurl.com',
+    likes: 0
+  }
+
+  await api
+    .post('/api/blogs')
+    .send(newBlog)
+    .set('Authorization',`Bearer ${newToken}`)
+    .expect(201)
+    .expect('Content-Type',/application\/json/)
+  // Get the id of the new blog
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToDelete = blogsAtStart[blogsAtStart.length - 1]
+  // Try to delete the blog as the original user
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .set('Authorization',`Bearer ${token}`)
+    .expect(403)
+    .expect('Content-Type',/application\/json/)
+
+  const blogsAtEnd = await helper.blogsInDb()
+
+  expect(blogsAtEnd).toHaveLength(helper.initialBlogs.length + 1)
+
+  const contents = blogsAtEnd.map(r => r.title)
+
+  expect(contents).toContain(blogToDelete.title)
+})
 
 afterAll(async () => {
   await mongoose.connection.close()
