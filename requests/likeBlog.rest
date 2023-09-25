@@ -1,0 +1,12 @@
+PUT http://localhost:3003/api/blogs/65101aeb9d934d3c4fed1ba0
+content-type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InJvb3QiLCJpZCI6IjY0ZjY4ZTgzMjU4YmViMDE4NjVkMjBlYSIsImlhdCI6MTY5NTU1MzI3NiwiZXhwIjoxNjk1NTU2ODc2fQ.lLs02IFBkY_kef-ZSwqTQdqsvgwdNPkHn-xPeWb1HME
+
+{
+  "url": "http://localhost:3003",
+  "title": "Test2222",
+  "author": "Superuser",
+  "likes": 20,
+  "user": "64f68e83258beb01865d20ea",
+  "id": "65101aeb9d934d3c4fed1ba0"
+}

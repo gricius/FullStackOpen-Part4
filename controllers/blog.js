@@ -4,7 +4,7 @@ const Blog = require('../models/blog')
 // const jwt = require('jsonwebtoken')
 
 blogsRouter.get('/', async (request, response) => {
-  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 }) // Populate user info
+  const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
   response.json(blogs)
 })
 
@@ -62,14 +62,29 @@ blogsRouter.delete('/:id', async (request, response) => {
 })
 
 blogsRouter.put('/:id', async (request, response) => {
-  const body = request.body
+  const { user } = request
+  const { id } = request.params
+  const { likes } = request.body
+  // console.log(request.body)
 
-  const blog = {
-    likes: body.likes
+  if (!user) {
+    return response.status(401).json({ error: 'User not found' })
   }
 
-  const updatedBlog = await Blog.findByIdAndUpdate(request.params.id, blog, { new: true })
-  response.json(updatedBlog)
+
+  try {
+    const blog = await Blog.findById(id)
+
+    if (!blog) {
+      return response.status(404).json({ error: 'Blog not found' })
+    }
+    blog.likes = likes
+    const updatedBlog = await blog.save()
+    response.json(updatedBlog)
+  } catch (error) {
+    console.error(error)
+    return response.status(500).json({ error: 'Internal server error' })
+  }
 }
 )
 
