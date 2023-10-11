@@ -13,14 +13,14 @@ mongoose.set('strictQuery', false)
 
 console.log('connecting to', config.MONGODB_URI)
 mongoose.connect(config.MONGODB_URI)
-  .then(() => {
-    console.log('connected to MongoDB')
-  }
-  )
-  .catch((error) => {
-    console.log('error connecting to MongoDB:', error.message)
-  }
-  )
+    .then(() => {
+        console.log('connected to MongoDB')
+    }
+    )
+    .catch((error) => {
+        console.log('error connecting to MongoDB:', error.message)
+    }
+    )
 
 app.use(cors())
 app.use(express.static('dist'))
